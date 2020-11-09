@@ -1,0 +1,27 @@
+exchanges:
+  - name: bitfinex
+    pairs:
+      - BTC/USD
+      - ETH/BTC
+  - name: gdax
+    pairs:
+      - BTC/USD
+      - ETH/BTC
+  - name: kraken
+    pairs:
+      - BTC/USD
+      - ETH/BTC
+  - name: bitstamp
+    pairs:
+      - BTC/USD
+      - ETH/BTC
+dbconf:
+  database: db
+  user: username
+  host: localhost
+  password: password
+web:
+  host: 0.0.0.0
+  port: 8080
+zmq_port: 46743
+
