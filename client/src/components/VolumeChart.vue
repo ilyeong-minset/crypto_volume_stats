@@ -7,6 +7,24 @@
                     v-model.number="data.maLength"
                     @change="rebuildChart">
             </horizontal-field>
+            <horizontal-field labelText="Mode">
+                <label class="radio">
+                    <input
+                        type="radio"
+                        name="volume-mode"
+                        value="diff"
+                        @change="rebuildChart"
+                        v-model="data.mode">Bought/Sold
+                </label>
+                <label class="radio">
+                    <input
+                        type="radio"
+                        name="volume-mode"
+                        value="total"
+                        @change="rebuildChart"
+                        v-model="data.mode">Total
+                </label>
+            </horizontal-field>
         </chart-options>
         <chart-scroller v-model="scrollData" @change="updateData()"/>
         <chart :chart-data="chartData"/>
@@ -21,9 +39,11 @@ import { ChartData, movingAverage } from '../chartUtils'
 import ChartScroller from './ChartScroller.vue'
 import HorizontalField from './HorizontalField.vue'
 import ChartOptions from './ChartOptions.vue'
+import { loadItem, saveItem } from '../storage.js'
 
 class VolumeChartData extends ChartData {
-    maLength = 9
+    maLength = loadItem('volumeChartMA', 9)
+    mode = loadItem('volumeChartMode', 'diff')
 
     async fetchData(first, count) {
         try {
@@ -34,7 +54,7 @@ class VolumeChartData extends ChartData {
             return []
         }
     }
-    makeChartData() {
+    makeDiff() {
         const labels = [],
             volUp = [],
             volDown = [],
@@ -54,7 +74,7 @@ class VolumeChartData extends ChartData {
                 data: volDiff
             }, {
                 type: 'line',
-                label: 'diff MA',
+                label: 'MA',
                 borderColor: '#faf',
                 data: movingAverage(volDiff.map(x => x.y), this.maLength, labels)
             }, {
@@ -69,6 +89,33 @@ class VolumeChartData extends ChartData {
                 data: volDown
             }]
         }
+    }
+    makeTotal() {
+        const labels = [],
+            vol = []
+        for (const [ts, up, down] of this.data) {
+            labels.push(ts)
+            vol.push({x: ts, y: up + down})
+        }
+        return {
+            datasets: [{
+                type: 'line',
+                label: 'MA',
+                borderColor: '#ffa',
+                data: movingAverage(vol.map(x => x.y), this.maLength, labels)
+            }, {
+                type: 'bar',
+                label: 'volume',
+                backgroundColor: 'gray',
+                data: vol
+            }]
+        }
+    }
+    makeChartData() {
+        if (this.mode === 'diff')
+            return this.makeDiff()
+        else if (this.mode === 'total')
+            return this.makeTotal()
     }
 }
 
@@ -99,6 +146,8 @@ export default makeChartComponent(Bar, {
             this.chartData = this.data.makeChartData()
         },
         rebuildChart() {
+            saveItem('volumeChartMA', this.data.maLength)
+            saveItem('volumeChartMode', this.data.mode)
             this.chartData = this.data.makeChartData()
         }
     }

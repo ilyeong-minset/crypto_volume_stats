@@ -1,8 +1,15 @@
 <template>
     <div>
-        <div class="content is-medium">
-            <h1 v-if="loading">Loading...</h1>
-            <h1 v-if="!loading">{{selected.pair}}</h1>
+        <div class="content is-large">
+            <div v-if="loading">Loading...</div>
+            <div v-if="!loading">
+                {{selected.pair}}
+                <button
+                    class="button"
+                    @click="updateData">
+                    <i class="fas fa-sync"></i>
+                </button>
+            </div>
         </div>
         <chart-options>
             <horizontal-field labelText="Update interval (seconds)">

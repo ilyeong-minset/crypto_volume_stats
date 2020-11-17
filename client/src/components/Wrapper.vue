@@ -4,7 +4,10 @@
             <a href="#" @click="toggle();$event.preventDefault()">{{title}}</a>
         </div>
         <div v-if="visible" class="wrapper-body">
-            <slot/>
+            <slot v-if="selected.pairIds.length"/>
+            <div v-if="selected.pairIds.length === 0">
+                Selecte some exchanges to view data
+            </div>
         </div>
     </div>
 </template>
@@ -12,9 +15,9 @@
 import { loadItem, saveItem } from '../storage'
 
 export default {
-    props: ['title'],
+    props: ['title', 'selected'],
     data: () => ({
-        visible: true,
+        visible: false,
         storageName: ''
     }),
     methods: {

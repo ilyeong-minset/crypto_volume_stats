@@ -3,19 +3,19 @@
         <exchange-select
             storageName=""
             v-model="selected"/>
-        <wrapper title="Summary">
+        <wrapper title="Summary" :selected="selected">
             <summary-table :selected="selected"/>
         </wrapper>
-        <wrapper title="Price chart">
+        <wrapper title="Price chart" :selected="selected">
             <OHLCVChart :selected="selected"/>
         </wrapper>
-        <wrapper title="Volume">
+        <wrapper title="Volume" :selected="selected">
             <volume-chart :selected="selected"/>
         </wrapper>
-        <wrapper title="Volume profile">
+        <wrapper title="Volume profile" :selected="selected">
             <volume-profile-chart :selected="selected"/>
         </wrapper>
-        <wrapper title="Recent trades">
+        <wrapper title="Recent trades" :selected="selected">
             <recent-trades :selected="selected"/>
         </wrapper>
         <flash-message/>
