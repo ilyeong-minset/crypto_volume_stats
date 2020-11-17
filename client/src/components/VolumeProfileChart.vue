@@ -49,11 +49,11 @@ import { getVolumeProfileChart } from '../api'
 import { Datetime } from 'vue-datetime'
 import { DateTime } from 'luxon'
 import 'vue-datetime/dist/vue-datetime.css'
-import { loadItem, saveItem } from '../storage'
+import storage from '../storage'
 import HorizontalField from './HorizontalField.vue'
 import ChartOptions from './ChartOptions.vue'
 
-let timeframe = loadItem('volumeProfileTimeframe', 3600)
+let timeframe = storage.load('volumeProfileChart', 'timeframe', 3600)
 
 const Chart = {
     extends: HorizontalBar,
@@ -135,7 +135,8 @@ export default {
             timeframe = Math.round(
                 (new Date(this.dateEnd).getTime() - new Date(this.dateStart).getTime()) / 1000
             )
-            saveItem('volumeProfileTimeframe', timeframe)
+            storage.save('volumeProfileChart',
+                'timeframe', timeframe)
         }
     },
     created() {

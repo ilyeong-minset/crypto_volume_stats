@@ -50,7 +50,7 @@
 <script>
 import Vue from 'vue'
 import { getPairs, getTimeframes } from '../api'
-import { loadItem, saveItem } from '../storage'
+import storage from '../storage'
 
 function tfToString(x) {
     const tfs = [
@@ -67,7 +67,7 @@ function tfToString(x) {
 }
 
 export default {
-    props: ['value', 'storageName'],
+    props: ['value'],
     data: () => ({
         pairs: {},
         selectedPair: '',
@@ -87,8 +87,7 @@ export default {
                 timeframe: this.selectedTimeframe
             }
             if (save)
-                saveItem(`exchangeSelect${this.storageName}`,
-                    selected)
+                storage.saveItems('exchangeSelect', selected)
             this.$emit('input', selected)
         },
         selectAll() {
@@ -117,9 +116,12 @@ export default {
             this.pairs = {}
             this.timeframes = []
         }
-        const selected =
-            loadItem(`exchangeSelect${this.storageName}`)
-        if (selected) {
+        const selected = storage.loadItems('exchangeSelect', {
+            pair: null,
+            pairIds: [],
+            timeframe: 0
+        })
+        if (selected.timeframe > 0) {
             this.selectedPair = selected.pair
             this.selectedPairIds = selected.pairIds
             this.selectedTimeframe = selected.timeframe

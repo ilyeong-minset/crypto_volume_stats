@@ -12,7 +12,7 @@
     </div>
 </template>
 <script>
-import { loadItem, saveItem } from '../storage'
+import storage from '../storage'
 
 export default {
     props: ['title', 'selected'],
@@ -23,12 +23,12 @@ export default {
     methods: {
         toggle() {
             this.visible = !this.visible
-            saveItem(this.storageName, this.visible)
+            storage.save('wrappers', this.storageName, this.visible)
         }
     },
     created() {
         this.storageName = this.title.replace(' ', '_').toLowerCase()
-        this.visible = loadItem(this.storageName, true)
+        this.visible = storage.load('wrappers', this.storageName, true)
     }
 }
 </script>

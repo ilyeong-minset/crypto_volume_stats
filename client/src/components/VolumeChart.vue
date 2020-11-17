@@ -39,11 +39,11 @@ import { ChartData, movingAverage } from '../chartUtils'
 import ChartScroller from './ChartScroller.vue'
 import HorizontalField from './HorizontalField.vue'
 import ChartOptions from './ChartOptions.vue'
-import { loadItem, saveItem } from '../storage.js'
+import storage from '../storage.js'
 
 class VolumeChartData extends ChartData {
-    maLength = loadItem('volumeChartMA', 9)
-    mode = loadItem('volumeChartMode', 'diff')
+    maLength = storage.load('volumeChart', 'maLength', 9)
+    mode = storage.load('volumeChart', 'mode', 'diff')
 
     async fetchData(first, count) {
         try {
@@ -146,8 +146,10 @@ export default makeChartComponent(Bar, {
             this.chartData = this.data.makeChartData()
         },
         rebuildChart() {
-            saveItem('volumeChartMA', this.data.maLength)
-            saveItem('volumeChartMode', this.data.mode)
+            storage.saveItems('volumeChart', {
+                maLength: this.data.maLength,
+                mode: this.data.mode
+            })
             this.chartData = this.data.makeChartData()
         }
     }

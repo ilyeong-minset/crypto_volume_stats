@@ -1,4 +1,6 @@
-const host = window.location.host
+const host = process.env.VUE_APP_API_HOST 
+    ? process.env.VUE_APP_API_HOST
+    : window.location.host
 
 export default {
     apiEndpoint: `http://${host}/api`,

@@ -36,7 +36,7 @@
 <script>
 import Vue from 'vue'
 import { getSummary } from '../api'
-import { loadItem, saveItem } from '../storage'
+import storage from '../storage'
 import HorizontalField from './HorizontalField.vue'
 import ChartOptions from './ChartOptions.vue'
 
@@ -60,7 +60,7 @@ export default {
         ],
         updated: null,
         updateIntervalID: 0,
-        updateInterval: loadItem('summaryTableInterval', 60)
+        updateInterval: storage.load('summaryTable', 'interval', 60)
     }),
     methods: {
         async updateData() {
@@ -82,7 +82,7 @@ export default {
             }
         },
         setUpdateInterval() {
-            saveItem('summaryTableInterval', this.updateInterval)
+            storage.save('summaryTable', 'interval', this.updateInterval)
             if (this.updateIntervalID > 0)
                 clearInterval(this.updateIntervalID)
             this.updateIntervalID = setInterval(() => this.updateData(),

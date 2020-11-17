@@ -50,17 +50,16 @@
     </div>
 </template>
 <script>
-import { loadItem, saveItem } from '../storage'
+import storage from '../storage'
 
 const barCountMax = 100,
     barCountInc = 10
-let barCount = loadItem('chartBarCount', 40)
-let offset = 0
+let barCount = storage.load('chartScroller', 'barCount', 40)
+let offset = storage.load('chartScroller', 'offset', 0)
 const updaters = []
 
 const updateValue = () => {
-    saveItem('chartBarCount', barCount)
-    saveItem('chartOffset', offset)
+    storage.saveItems('chartScroller', { barCount, offset })
     for (const x of updaters)
         x()
 }
